@@ -4,24 +4,24 @@ require_once 'connection.php'; // Include database connection script
 // Handle POST request
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
     // Retrieve POST data
-    $username = $_POST["username"];
+    $email = $_POST["email"];
     $password = $_POST["password"];
 
     // Validate inputs (you should add more validation)
-    if (empty($username) || empty($password)) {
-        echo json_encode(array("message" => "Username and password are required"));
+    if (empty($email) || empty($password)) {
+        echo json_encode(array("message" => "email and password are required"));
         exit;
     }
 
     // Check credentials
-    $selectQuery = "SELECT * FROM users WHERE username = '$username'";
+    $selectQuery = "SELECT * FROM users WHERE email = '$email'";
     $result = mysqli_query($conn, $selectQuery);
     if (mysqli_num_rows($result) > 0) {
         $row = mysqli_fetch_assoc($result);
         if (password_verify($password, $row["password"])) {
             session_start();
             $_SESSION["user_id"] = $row["id"];
-            $_SESSION["username"] = $row["username"];
+            $_SESSION["email"] = $row["email"];
             echo json_encode(array("message" => "Login successful", "user_id" => $row));
         } else {
             echo json_encode(array("message" => "Invalid password"));
