@@ -6,20 +6,23 @@ function getNestedComments($postId, $parentId = null) {
     global $conn;
     $comments = array();
 
-    $query = "SELECT comments.*, users.username, users.email 
+    $query = "SELECT comments.*, users.* 
               FROM comments 
               LEFT JOIN users ON comments.user_id = users.id 
               WHERE comments.post_id = $postId AND comments.parent_comment_id " . ($parentId ? "= $parentId" : "IS NULL");
     $result = mysqli_query($conn, $query);
 
     while ($row = mysqli_fetch_assoc($result)) {
+        $user = array(
+            'id' => $row['user_id'],
+            'username' => $row['username'],
+            'email' => $row['email']
+            // Add more user details as needed
+        );
+
         $comment = array(
             'id' => $row['id'],
-            'user_id' => $row['user_id'],
-            'user' => array(
-                'username' => $row['username'],
-                'email' => $row['email']
-            ),
+            'user' => $user,
             'content' => $row['content'],
             'created_at' => $row['created_at'],
             'replies' => array()

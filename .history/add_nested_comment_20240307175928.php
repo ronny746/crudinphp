@@ -15,8 +15,8 @@ function getNestedComments($postId, $parentId = null) {
     while ($row = mysqli_fetch_assoc($result)) {
         $comment = array(
             'id' => $row['id'],
-            'user_id' => $row['user_id'],
             'user' => array(
+                'id' => $row['user_id'],
                 'username' => $row['username'],
                 'email' => $row['email']
             ),

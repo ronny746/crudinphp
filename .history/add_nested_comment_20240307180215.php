@@ -11,7 +11,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     }
     
     // Retrieve POST data
-    $userId = $_POST["user_id"];
+    $userId = $_SESSION["user_id"];
     $postId = $_POST["post_id"];
     $parentCommentId = $_POST["parent_comment_id"];
     $content = $_POST["content"];
