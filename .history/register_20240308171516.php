@@ -14,14 +14,6 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $email = $_POST['email'];
     $password = $_POST['password'];
 
-    $checkUserQuery = "SELECT * FROM users WHERE email = '$email'";
-    $result = mysqli_query($conn, $checkUserQuery);
-    if (mysqli_num_rows($result) > 0) {
-        // User already exists, return an error message
-        echo json_encode(array("message" => "User with email $email already exists"));
-        exit;
-    }
-
     // Insert new user into the database
     $insertQuery = "INSERT INTO users (username, email, password) VALUES ('$username', '$email', '$password')";
     if (mysqli_query($conn, $insertQuery)) {
