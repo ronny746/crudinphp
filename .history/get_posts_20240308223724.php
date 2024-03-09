@@ -10,6 +10,8 @@ if ($_SERVER["REQUEST_METHOD"] == "GET") {
     users.email, 
     COUNT(DISTINCT likes.id) AS likes_count, 
     COUNT(DISTINCT comments.id) AS comments_count,
+
+    
     (
         SELECT content
         FROM comments

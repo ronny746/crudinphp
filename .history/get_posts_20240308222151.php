@@ -10,53 +10,19 @@ if ($_SERVER["REQUEST_METHOD"] == "GET") {
     users.email, 
     COUNT(DISTINCT likes.id) AS likes_count, 
     COUNT(DISTINCT comments.id) AS comments_count,
-    (
-        SELECT content
-        FROM comments
-        WHERE post_id = posts.id
-        ORDER BY created_at DESC
-        LIMIT 1
-    ) AS last_comment_content,
-    (
-        SELECT username
-        FROM users
-        WHERE id = (
-            SELECT user_id
-            FROM comments
-            WHERE post_id = posts.id
-            ORDER BY created_at DESC
-            LIMIT 1
-        )
-    ) AS last_comment_username,
-    (
-        SELECT user_id
-        FROM comments
-        WHERE post_id = posts.id
-        ORDER BY created_at DESC
-        LIMIT 1
-    ) AS last_comment_user_id,
-    (
-        SELECT username
-        FROM users
-        WHERE id = (
-            SELECT user_id
-            FROM likes
-            WHERE post_id = posts.id
-            ORDER BY created_at DESC
-            LIMIT 1
-        )
-    ) AS last_like_username,
-    (
-        SELECT user_id
-        FROM likes
-        WHERE post_id = posts.id
-        ORDER BY created_at DESC
-        LIMIT 1
-    ) AS last_like_user_id
+    MAX(comments.created_at) AS last_comment_at,
+    MAX(comments.id) AS last_comment_id,
+    MAX(comments.content) AS last_comment_content,
+    MAX(comments.user_id) AS last_comment_user_id,
+    MAX(likes.user_id) AS last_like_by,
+    u.username AS last_comment_username,
+    u2.username AS last_like_username
 FROM posts 
 INNER JOIN users ON posts.user_id = users.id 
 LEFT JOIN likes ON posts.id = likes.post_id 
 LEFT JOIN comments ON posts.id = comments.post_id 
+LEFT JOIN users u ON comments.user_id = u.id
+LEFT JOIN users u2 ON likes.user_id = u2.id
 GROUP BY posts.id;
 ";
     $result = mysqli_query($conn, $getPostsQuery);

@@ -10,13 +10,10 @@ if ($_SERVER["REQUEST_METHOD"] == "GET") {
     users.email, 
     COUNT(DISTINCT likes.id) AS likes_count, 
     COUNT(DISTINCT comments.id) AS comments_count,
-    (
-        SELECT content
-        FROM comments
-        WHERE post_id = posts.id
-        ORDER BY created_at DESC
-        LIMIT 1
-    ) AS last_comment_content,
+    MAX(comments.content) AS last_comment,
+    MAX(comments.user_id) AS last_comment_user_id,
+    MAX(likes.user_id) AS last_likes_user_id,
+    
     (
         SELECT username
         FROM users
@@ -28,13 +25,6 @@ if ($_SERVER["REQUEST_METHOD"] == "GET") {
             LIMIT 1
         )
     ) AS last_comment_username,
-    (
-        SELECT user_id
-        FROM comments
-        WHERE post_id = posts.id
-        ORDER BY created_at DESC
-        LIMIT 1
-    ) AS last_comment_user_id,
     (
         SELECT username
         FROM users
